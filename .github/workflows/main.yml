@@ -1,0 +1,34 @@
+name: Upstream Sync
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # 每天 UTC 时间 0 点（北京时间早上 8 点）自动执行
+  workflow_dispatch: # 允许你手动点击按钮触发同步
+
+jobs:
+  sync_latest_from_upstream:
+    name: Sync latest commits from upstream repo
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
+
+    steps:
+      # 第一步：检出你的仓库代码
+      - name: Checkout target repo
+        uses: actions/checkout@v3
+        with:
+          ref: beta2.0 # 确保同步到你的 beta2.0 分支
+          persist-credentials: false
+
+      # 第二步：同步上游仓库
+      - name: Sync upstream changes
+        uses: ahmadnassri/action-workflow-sync@v1
+        with:
+          # 注意：这里需要填写你想要“搬运”的那个原始仓库的名称
+          # 如果原作者是 cmliu，这里可能填 cmliu/edgetunnel
+          upstream_repository: 原始作者的用户名/edgetunnel 
+          upstream_branch: beta2.0
+          target_branch: beta2.0
+          github_token: ${{ secrets.GITHUB_TOKEN }}
