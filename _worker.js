@@ -20,6 +20,8 @@ export default {
 		}
 		const url = new URL(请求URL文本);
 		const urlPath = url.pathname.toLowerCase();
+		if (urlPath === '/admin') {
+		}
 		if (urlPath === '/' || urlPath === '') {
 			return Response.redirect('https://www.baidu.com', 302);
 		}
